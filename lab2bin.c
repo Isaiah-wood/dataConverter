@@ -2,7 +2,7 @@
 // @Author: Isaiah Isaiah@buaa.edu.cn
 // @Date: 2025-04-21 16:43:06
 // @LastEditors: Isaiah Isaiah@buaa.edu.cn
-// @LastEditTime: 2025-05-07 15:39:59
+// @LastEditTime: 2025-05-07 16:56:36
 // @FilePath: \prj_convert\lab2bin.c
 // @Description: 
 /******************   ******************/
@@ -23,92 +23,99 @@
 #include "convert.h"
 
 
-void print_help();
-void process_file(const char *filename);
-
-// uint8_t pack_bits(uint8_t *bits);
-// void csv_to_bin(const char *csv_path, const char *bin_path);
-// void unpack_byte(uint8_t byte, uint8_t *out_bits);
-// void bin_to_array(const char *bin_path, uint8_t array[ROWS][PACKED_COLS]);
+void process_file(const char *input_file, const char *output_file) ;
 
 
+
+// 打印帮助信息
+void print_help(const char *prog_name) {
+    printf("lab2bin: datafile convert tools\n\n");
+    printf("Usage: %s [options]\n", prog_name);
+    printf("Options:\n");
+    printf("  -h, --help             Show this help message\n");
+    printf("  -v, --version          Show the version\n");
+    printf("  -i, --input <file>     Specify input file\n");
+    printf("  -o, --output <file>    Specify output file\n");
+}
 
 int main(int argc, char *argv[]) 
 {
+    static struct option long_options[] = {
+        {"help",     no_argument,       0, 'h'},
+        {"version",  no_argument,       0, 'v'},
+        {"input",   required_argument, 0, 'i'},
+        {"output",   required_argument, 0, 'o'},
+        {0, 0, 0, 0}
+    };
 
-    // 检查参数数量
-    if (argc < 2) {
-        printf("错误：缺少参数。使用 -h 查看帮助信息。\n");
-        return 1;
-    }
-
-    // 处理参数
-    if (strcmp(argv[1], "-h") == 0) {
-        print_help();
-    } else if (strcmp(argv[1], "-f") == 0) {
-        if (argc < 3) {
-            printf("错误：-f 参数后需要指定文件名。\n");
-            return 1;
+    int opt;
+    int option_index = 0;
+    const char *input_file = NULL;
+    const char *output_file = NULL;
+    while((opt = getopt_long(argc, argv, "hvi:o:", long_options, &option_index)) != -1) {
+        switch (opt) {
+            case 'h': // --help 或 -h
+                printf("Usage: %s --input <file> --output <file> --version --help\n", argv[0]);
+                print_help(argv[0]);
+                return 0;
+            case 'v': // --version 或 -v
+                printf("Version 1.0\n");
+                return 0;
+            case 'i': // --input 或 -i
+                input_file = optarg;
+                break;
+            case 'o': // --output 或 -o
+                output_file = optarg;
+                break;
+            case '?':
+                // 处理未知选项或缺少参数的情况
+                if (optopt == 'i') {
+                    fprintf(stderr, "Option -%c requires an argument.\n", optopt);
+                } 
+                else if (optopt == 'o') {
+                    fprintf(stderr, "Option -%c requires an argument.\n", optopt);
+                } else {
+                    fprintf(stderr, "Unknown option: %s\n", argv[optind - 1]);
+                }
+                return 1;
+            default:
+                print_help(argv[0]);
+                return 1;
         }
-        process_file(argv[2]);
-    } else {
-        printf("错误：未知参数 '%s'。使用 -h 查看帮助信息。\n", argv[1]);
-        return 1;
     }
+    // 处理非选项参数
+    if (optind < argc) {
+        printf("Non-option arguments: ");
+        while (optind < argc) {
+            printf("%s ", argv[optind++]);
+        }
+        printf("\n");
+    }   
 
-    // const char *csv_file = "PatternLib.csv";
-    // const char *bin_file = "PatternLib.bin";
-
-    // // 写入 bin 文件
-    // csv_to_bin(csv_file, bin_file);
-
-    // // 从 bin 文件读取数据
-    // static uint8_t array[ROWS][PACKED_COLS];  // 注意较大内存使用
-    // bin_to_array(bin_file, array);
-
-    // // 示例输出第1行前20位
-    // printf("第1行前20位:\n");
-    // for (int i = 0; i < 150; i++) {
-    //     printf("%d ", array[15543][i]);
-    // }
-    // printf("\n");
+    // 打印结果
+    if (input_file) {
+        printf("Input file: %s\n", input_file);
+    }
+    if (output_file) {
+        printf("Output file: %s\n", output_file);
+    }
+    
+    process_file(input_file, output_file);
 
     return 0;
-}
-
-// 打印帮助信息
-void print_help() {
-    printf("lab2bin - 数据库文件处理工具\n\n");
-    printf("功能:\n");
-    printf("  将.csv文件转换为.bin文件\n");
-    printf("用法:\n");
-    printf("  lab2bin -h             显示此帮助信息\n\n");
-    printf("  lab2bin -f xxx.csv    读取并处理指定的数据库文件\n");
-    printf("示例:\n");
-    printf("  lab2bin -f data.csv\n");
 }
 
 
 
 // 处理文件
-void process_file(const char *filename) {
-
-    // const char *csv_file = "PatternLib.csv";
-    // const char *bin_file = "PatternLib.bin";
-
-    char *fullfilename = (char *)malloc(strlen(filename) + 5); // 4个字符 + 1个结束符   
-    fullfilename = strcpy(fullfilename, filename);
-
-
-    char *csv_file = strcat(fullfilename, ".csv");
-    char *bin_file = strcat(fullfilename, ".bin");
-
+void process_file(const char *input_file, const char *output_file) 
+{
     // 写入 bin 文件
-    csv_to_bin(csv_file, bin_file);
+    csv_to_bin(input_file, output_file);
 
     // 从 bin 文件读取数据
     static uint8_t array[ROWS][PACKED_COLS];  // 注意较大内存使用
-    bin_to_array(bin_file, array);
+    bin_to_array(output_file, array);
 
     // 示例输出第1行前20位
     printf("第1行前20位:\n");

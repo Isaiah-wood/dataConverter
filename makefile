@@ -1,35 +1,36 @@
-# Compiler and flags
-CC = gcc
-CFLAGS = -Wall -Wextra -O2
+# 编译器与工具
+CC := gcc
+RM := del /Q
+EXE_EXT := .exe  # Windows 下生成 SolomonC.exe
 
-# Directories
-SRC_DIR = src
-OBJ_DIR = obj
-BIN_DIR = bin
+# 编译选项
+CFLAGS := -Wall -g
 
-# Target executable
-TARGET = $(BIN_DIR)/program
+# 工程目标
+TARGET := lab2bin$(EXE_EXT)
 
-# Source and object files
-SRCS = $(wildcard $(SRC_DIR)/*.c)
-OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+# 源文件与目标文件自动推导
+SRCS := $(wildcard *.c)
+OBJS := $(SRCS:.c=.o)
+DEPS := $(OBJS:.o=.d)
 
-# Default target
-all: $(TARGET)
+# 默认目标
+all: $(TARGET) 
 
-# Link object files to create the executable
+# 链接
 $(TARGET): $(OBJS)
-	mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
-# Compile source files to object files
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+# 编译规则（带依赖文件生成）
+%.o: %.c
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
-# Clean up build files
+# 清理构建产物
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	$(RM) *.o *.d
 
-# Phony targets
+# 包含自动生成的依赖文件（确保不存在时报错不影响）
+-include $(DEPS)
+
+# 伪目标声明
 .PHONY: all clean

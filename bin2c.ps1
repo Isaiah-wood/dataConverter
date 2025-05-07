@@ -1,0 +1,1 @@
+xxd -i data.bin > data.c
