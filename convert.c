@@ -2,7 +2,7 @@
 // @Author: Isaiah Isaiah@buaa.edu.cn
 // @Date: 2025-04-21 17:16:45
 // @LastEditors: Isaiah Isaiah@buaa.edu.cn
-// @LastEditTime: 2025-05-07 11:15:56
+// @LastEditTime: 2025-05-10 18:57:44
 // @FilePath: \prj_convert\convert.c
 // @Description: 
 /******************   ******************/
@@ -10,8 +10,10 @@
 #include <stdio.h>
 #include "convert.h"
 
-#define COLS 1200
-#define COMPRESSED_COLS (COLS / 8)
+// #define COLS 1200
+// #define COMPRESSED_COLS (COLS / 8)
+
+
 
 // 私有函数：打包8位为1字节
 uint8_t pack_bits(uint8_t *bits) {
@@ -61,25 +63,6 @@ void csv_to_bin(const char *csv_path, const char *bin_path) {
     printf("CSV 转 BIN 完成\n");
 }
 
-// 公有函数：读取BIN文件到数组
-// int bin_to_array(const char *bin_file, unsigned char array[][COMPRESSED_COLS], int rows) {
-//     FILE *fp = fopen(bin_file, "rb");
-//     if (!fp) {
-//         perror("读取BIN失败");
-//         return -1;
-//     }
-
-//     for (int i = 0; i < rows; i++) {
-//         if (fread(array[i], 1, COMPRESSED_COLS, fp) != COMPRESSED_COLS) {
-//             perror("读取行数据失败");
-//             fclose(fp);
-//             return -1;
-//         }
-//     }
-
-//     fclose(fp);
-//     return 0;
-// }
 void bin_to_array(const char *bin_path, uint8_t array[ROWS][PACKED_COLS]) {
     FILE *bin = fopen(bin_path, "rb");
     if (!bin) {

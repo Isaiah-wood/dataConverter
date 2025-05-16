@@ -4,10 +4,10 @@ RM := del /Q
 EXE_EXT := .exe  # Windows 下生成 SolomonC.exe
 
 # 编译选项
-CFLAGS := -Wall -g
+CFLAGS := -Wall -g -std=c99
 
 # 工程目标
-TARGET := lab2bin$(EXE_EXT)
+TARGET := dcver$(EXE_EXT)
 
 # 源文件与目标文件自动推导
 SRCS := $(wildcard *.c)

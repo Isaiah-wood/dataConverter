@@ -2,6 +2,15 @@
     "files.associations": {
         "ctype.h": "c",
         "windows.h": "c",
-        "convert.h": "c"
+        "convert.h": "c",
+        "xutility": "c",
+        "getopt.h": "c",
+        "bit": "c",
+        "compare": "c",
+        "cstddef": "c",
+        "limits": "c",
+        "type_traits": "c",
+        "xtr1common": "c",
+        "utility": "c"
     }
 }
