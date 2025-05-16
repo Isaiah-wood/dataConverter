@@ -29,3 +29,9 @@ Options:
 
 ### Example
 ./dcver -i data.csv -o data.bin -m float
+
+
+### TODO
+
+- [ ] Improve code prompts
+- [ ] Add support for strings and other data types
