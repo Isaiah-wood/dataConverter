@@ -28,8 +28,9 @@ Options:
 ```
 
 ### Example
+```
 ./dcver -i data.csv -o data.bin -m float
-
+```
 
 ### TODO
 
